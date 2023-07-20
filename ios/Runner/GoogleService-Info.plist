@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>575992259872-hrgc4kqd8q9v9rer66i0ga6j5sn0npp2.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.575992259872-hrgc4kqd8q9v9rer66i0ga6j5sn0npp2</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB7cY54iaefyI0_mio4WlRot4zYk_9QM0k</string>
+	<key>GCM_SENDER_ID</key>
+	<string>575992259872</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.justddan.bookreview.bookreview</string>
+	<key>PROJECT_ID</key>
+	<string>flutter-book-review-test</string>
+	<key>STORAGE_BUCKET</key>
+	<string>flutter-book-review-test.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:575992259872:ios:5713c7e95276750995e345</string>
+</dict>
+</plist>

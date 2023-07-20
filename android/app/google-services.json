@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "575992259872",
+    "project_id": "flutter-book-review-test",
+    "storage_bucket": "flutter-book-review-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:575992259872:android:93566ecb9b78ec8a95e345",
+        "android_client_info": {
+          "package_name": "com.justddan.bookreview.bookreview"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "575992259872-rvlbq0kdaaur0bm9j6fr0e4hkbrtkud0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDidvPopJBjOIBe2mvK20dzBCD4AmCJzs8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "575992259872-rvlbq0kdaaur0bm9j6fr0e4hkbrtkud0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
