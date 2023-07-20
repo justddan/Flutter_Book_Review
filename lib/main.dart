@@ -1,7 +1,9 @@
 import 'package:bookreview/firebase_options.dart';
+import 'package:bookreview/src/app.dart';
+import 'package:bookreview/src/common/cubit/app_data_load_cubit.dart';
 import 'package:bookreview/src/common/interceptor/custom_interceptor.dart';
-import 'package:bookreview/src/common/model/naver_book_search_option.dart';
 import 'package:bookreview/src/common/repository/naver_book_repository.dart';
+import 'package:bookreview/src/splash/cubit/splash_cubit.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -23,20 +25,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(
+          create: (context) => NaverBookRepository(dio),
+        )
+      ],
+      child: MultiBlocProvider(
         providers: [
-          RepositoryProvider(
-            create: (context) => NaverBookRepository(dio),
-          )
-        ],
-        child: Builder(
-          builder: (context) => FutureBuilder(
-            future: context.read<NaverBookRepository>().searchBooks(
-                  const NaverBookSearchOption.init(query: "플러터"),
-                ),
-            builder: (context, snapshot) {
-              return Container();
-            },
+          BlocProvider(
+            create: (context) => AppDataLoadCubit(),
+            lazy: false,
           ),
-        ));
+          BlocProvider(
+            create: (context) => SplashCubit(),
+          ),
+        ],
+        child: const App(),
+      ),
+    );
   }
 }

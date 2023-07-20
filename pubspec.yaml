@@ -44,6 +44,7 @@ dependencies:
   cloud_firestore: ^4.8.3
   firebase_storage: ^11.2.5
   json_annotation: ^4.8.1
+  google_fonts: ^5.1.0
 
 dev_dependencies:
   flutter_test:
