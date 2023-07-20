@@ -3,6 +3,7 @@ import 'package:bookreview/src/app.dart';
 import 'package:bookreview/src/common/cubit/app_data_load_cubit.dart';
 import 'package:bookreview/src/common/interceptor/custom_interceptor.dart';
 import 'package:bookreview/src/common/repository/naver_book_repository.dart';
+import 'package:bookreview/src/init/cubit/init_cubit.dart';
 import 'package:bookreview/src/splash/cubit/splash_cubit.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -36,6 +37,10 @@ class MyApp extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
+          BlocProvider(
+            create: (context) => InitCubit(),
+            lazy: false,
+          ),
           BlocProvider(
             create: (context) => AppDataLoadCubit(),
             lazy: false,

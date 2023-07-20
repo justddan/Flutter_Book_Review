@@ -1,6 +1,8 @@
 import 'package:bookreview/src/common/components/app_font.dart';
 import 'package:bookreview/src/common/components/btn.dart';
+import 'package:bookreview/src/init/cubit/init_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class InitPage extends StatelessWidget {
   const InitPage({super.key});
@@ -43,7 +45,9 @@ class InitPage extends StatelessWidget {
                 ),
                 Btn(
                   text: "시작하기",
-                  onTap: () {},
+                  onTap: () {
+                    context.read<InitCubit>().startApp();
+                  },
                 ),
                 const SizedBox(
                   height: 40,
