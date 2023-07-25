@@ -1,3 +1,4 @@
+import 'package:bookreview/src/login/page/login_page.dart';
 import 'package:bookreview/src/root/page/root_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -21,8 +22,12 @@ class _AppState extends State<App> {
           path: "/",
           builder: (context, state) => const RootPage(),
         ),
+        GoRoute(
+          path: "/login",
+          builder: (context, state) => const LoginPage(),
+        ),
       ],
-      initialLocation: "/",
+      initialLocation: "/login",
     );
   }
 
