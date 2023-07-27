@@ -1,6 +1,9 @@
+import 'package:bookreview/src/common/cubit/authentication_cubit.dart';
 import 'package:bookreview/src/login/page/login_page.dart';
 import 'package:bookreview/src/root/page/root_page.dart';
+import 'package:bookreview/src/signup/page/signup_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class App extends StatefulWidget {
@@ -17,6 +20,24 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
     router = GoRouter(
+      initialLocation: "/",
+      refreshListenable: context.read<AuthenticationCubit>(),
+      redirect: (context, state) {
+        var authStatus = context.read<AuthenticationCubit>().state.status;
+        switch (authStatus) {
+          case AuthenticationStatus.authentication:
+            break;
+          case AuthenticationStatus.unauthenticated:
+            return "/signup";
+          case AuthenticationStatus.unknown:
+            return "/login";
+          case AuthenticationStatus.init:
+            break;
+          case AuthenticationStatus.error:
+            break;
+        }
+        return state.path;
+      },
       routes: [
         GoRoute(
           path: "/",
@@ -26,8 +47,11 @@ class _AppState extends State<App> {
           path: "/login",
           builder: (context, state) => const LoginPage(),
         ),
+        GoRoute(
+          path: "/signup",
+          builder: (context, state) => const SignupPage(),
+        ),
       ],
-      initialLocation: "/login",
     );
   }
 
