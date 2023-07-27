@@ -1,5 +1,7 @@
 import 'package:bookreview/src/common/components/app_font.dart';
+import 'package:bookreview/src/common/cubit/authentication_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class LoginPage extends StatelessWidget {
@@ -7,7 +9,7 @@ class LoginPage extends StatelessWidget {
 
   Widget _googleLoginBtn(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: context.read<AuthenticationCubit>().googleLogin,
       child: Container(
         margin: const EdgeInsets.symmetric(
           horizontal: 50,
@@ -39,7 +41,9 @@ class LoginPage extends StatelessWidget {
 
   Widget _appleLoginBtn(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        // context.read<AuthenticationCubit>().appleLogin();
+      },
       child: Container(
         margin: const EdgeInsets.symmetric(
           horizontal: 50,

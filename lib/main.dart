@@ -1,11 +1,16 @@
 import 'package:bookreview/firebase_options.dart';
 import 'package:bookreview/src/app.dart';
 import 'package:bookreview/src/common/cubit/app_data_load_cubit.dart';
+import 'package:bookreview/src/common/cubit/authentication_cubit.dart';
 import 'package:bookreview/src/common/interceptor/custom_interceptor.dart';
+import 'package:bookreview/src/common/repository/authentication_repository.dart';
 import 'package:bookreview/src/common/repository/naver_book_repository.dart';
+import 'package:bookreview/src/common/repository/user_repository.dart';
 import 'package:bookreview/src/init/cubit/init_cubit.dart';
 import 'package:bookreview/src/splash/cubit/splash_cubit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,11 +34,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var db = FirebaseFirestore.instance;
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider(
           create: (context) => NaverBookRepository(dio),
-        )
+        ),
+        RepositoryProvider(
+          create: (context) => AuthenticationRepository(FirebaseAuth.instance),
+        ),
+        RepositoryProvider(
+          create: (context) => UserRepository(db),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -47,6 +59,12 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => SplashCubit(),
+          ),
+          BlocProvider(
+            create: (context) => AuthenticationCubit(
+              context.read<AuthenticationRepository>(),
+              context.read<UserRepository>(),
+            ),
           ),
         ],
         child: const App(),
