@@ -51,7 +51,8 @@ class _AppState extends State<App> {
         GoRoute(
           path: "/signup",
           builder: (context, state) => BlocProvider(
-            create: (context) => SignupCubit(),
+            create: (context) =>
+                SignupCubit(context.read<AuthenticationCubit>().state.user!),
             child: const SignupPage(),
           ),
         ),
