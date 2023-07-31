@@ -1,4 +1,6 @@
 import 'package:bookreview/src/common/cubit/authentication_cubit.dart';
+import 'package:bookreview/src/common/repository/user_repository.dart';
+import 'package:bookreview/src/home/page/home_page.dart';
 import 'package:bookreview/src/login/page/login_page.dart';
 import 'package:bookreview/src/root/page/root_page.dart';
 import 'package:bookreview/src/signup/cubit/signup_cubit.dart';
@@ -27,7 +29,7 @@ class _AppState extends State<App> {
         var authStatus = context.read<AuthenticationCubit>().state.status;
         switch (authStatus) {
           case AuthenticationStatus.authentication:
-            break;
+            return "/home";
           case AuthenticationStatus.unauthenticated:
             return "/signup";
           case AuthenticationStatus.unknown:
@@ -49,10 +51,16 @@ class _AppState extends State<App> {
           builder: (context, state) => const LoginPage(),
         ),
         GoRoute(
+          path: "/home",
+          builder: (context, state) => const HomePage(),
+        ),
+        GoRoute(
           path: "/signup",
           builder: (context, state) => BlocProvider(
-            create: (context) =>
-                SignupCubit(context.read<AuthenticationCubit>().state.user!),
+            create: (context) => SignupCubit(
+              context.read<AuthenticationCubit>().state.user!,
+              context.read<UserRepository>(),
+            ),
             child: const SignupPage(),
           ),
         ),

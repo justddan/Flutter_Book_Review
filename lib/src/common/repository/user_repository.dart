@@ -16,4 +16,13 @@ class UserRepository {
     } catch (e) {}
     return null;
   }
+
+  Future<bool> joinUser(UserModel userModel) async {
+    try {
+      db.collection("users").add(userModel.toMap());
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }
