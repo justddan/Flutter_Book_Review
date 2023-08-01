@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bookreview/src/common/components/app_font.dart';
 import 'package:bookreview/src/common/components/btn.dart';
 import 'package:bookreview/src/common/components/loading.dart';
+import 'package:bookreview/src/common/cubit/authentication_cubit.dart';
 import 'package:bookreview/src/common/cubit/upload_cubit.dart';
 import 'package:bookreview/src/signup/cubit/signup_cubit.dart';
 import 'package:flutter/material.dart';
@@ -87,6 +88,7 @@ class SignupPage extends StatelessWidget {
                       state.profileFile!, state.userModel!.uid!);
                   break;
                 case SignupStatus.success:
+                  context.read<AuthenticationCubit>().reloadAuth();
                   break;
                 case SignupStatus.fail:
                   break;
