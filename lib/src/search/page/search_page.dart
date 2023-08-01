@@ -35,7 +35,7 @@ class SearchPage extends StatelessWidget {
             InputWidget(
               onSearch: context.read<SearchBookCubit>().search,
             ),
-            Expanded(child: _SearchResultView()),
+            const Expanded(child: _SearchResultView()),
           ],
         ),
       ),
@@ -43,10 +43,29 @@ class SearchPage extends StatelessWidget {
   }
 }
 
-class _SearchResultView extends StatelessWidget {
-  _SearchResultView();
+class _SearchResultView extends StatefulWidget {
+  const _SearchResultView();
 
+  @override
+  State<_SearchResultView> createState() => _SearchResultViewState();
+}
+
+class _SearchResultViewState extends State<_SearchResultView> {
   late SearchBookCubit cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(() {
+      if (controller.offset > controller.position.maxScrollExtent - 100 &&
+          cubit.state.status == CommonStateStatus.loaded) {
+        print("call Next Page");
+        cubit.nextPage();
+      }
+    });
+  }
+
+  ScrollController controller = ScrollController();
 
   Widget _messageView(String message) {
     return Center(
@@ -61,6 +80,7 @@ class _SearchResultView extends StatelessWidget {
 
   Widget resultView() {
     return ListView.separated(
+      controller: controller,
       itemBuilder: (context, index) {
         NaverBookInfo bookInfo = cubit.state.result!.items![index];
         return Row(
@@ -113,7 +133,7 @@ class _SearchResultView extends StatelessWidget {
           color: Color(0xff262626),
         ),
       ),
-      itemCount: cubit.state.result!.items!.length,
+      itemCount: cubit.state.result?.items?.length ?? 0,
     );
   }
 

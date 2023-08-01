@@ -11,6 +11,9 @@ class NaverBookInfoResults extends Equatable {
   final int? display;
   final List<NaverBookInfo>? items;
 
+  const NaverBookInfoResults.init()
+      : this(start: 1, display: 10, items: const []);
+
   const NaverBookInfoResults({
     this.total,
     this.start,
@@ -20,6 +23,20 @@ class NaverBookInfoResults extends Equatable {
 
   factory NaverBookInfoResults.fromJson(Map<String, dynamic> json) =>
       _$NaverBookInfoResultsFromJson(json);
+
+  NaverBookInfoResults copyWith({
+    List<NaverBookInfo>? items,
+    int? display,
+    int? start,
+    int? total,
+  }) {
+    return NaverBookInfoResults(
+      display: display ?? this.display,
+      start: start ?? this.start,
+      total: total ?? this.total,
+      items: [...this.items ?? [], ...items ?? []],
+    );
+  }
 
   @override
   List<Object?> get props => [
