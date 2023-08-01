@@ -46,7 +46,7 @@ class HomePage extends StatelessWidget {
               InputWidget(
                 isEnabled: false,
                 onTap: () {
-                  context.go("/search");
+                  context.push("/search");
                 },
               ),
             ],

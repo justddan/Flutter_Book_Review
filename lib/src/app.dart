@@ -1,8 +1,10 @@
 import 'package:bookreview/src/common/cubit/authentication_cubit.dart';
+import 'package:bookreview/src/common/repository/naver_book_repository.dart';
 import 'package:bookreview/src/common/repository/user_repository.dart';
 import 'package:bookreview/src/home/page/home_page.dart';
 import 'package:bookreview/src/login/page/login_page.dart';
 import 'package:bookreview/src/root/page/root_page.dart';
+import 'package:bookreview/src/search/cubit/search_book_cubit.dart';
 import 'package:bookreview/src/search/page/search_page.dart';
 import 'package:bookreview/src/signup/cubit/signup_cubit.dart';
 import 'package:bookreview/src/signup/page/signup_page.dart';
@@ -60,7 +62,11 @@ class _AppState extends State<App> {
         ),
         GoRoute(
           path: "/search",
-          builder: (context, state) => const SearchPage(),
+          builder: (context, state) => BlocProvider(
+            create: (context) =>
+                SearchBookCubit(context.read<NaverBookRepository>()),
+            child: const SearchPage(),
+          ),
         ),
         GoRoute(
           path: "/signup",
