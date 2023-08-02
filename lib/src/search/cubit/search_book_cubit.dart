@@ -65,5 +65,5 @@ class SearchBookState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, result];
+  List<Object?> get props => [status, result, searchOption];
 }

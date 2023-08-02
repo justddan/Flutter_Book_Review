@@ -1,4 +1,6 @@
+import 'package:bookreview/src/book_info/page/book_info_page.dart';
 import 'package:bookreview/src/common/cubit/authentication_cubit.dart';
+import 'package:bookreview/src/common/model/naver_book_info.dart';
 import 'package:bookreview/src/common/repository/naver_book_repository.dart';
 import 'package:bookreview/src/common/repository/user_repository.dart';
 import 'package:bookreview/src/home/page/home_page.dart';
@@ -59,6 +61,11 @@ class _AppState extends State<App> {
         GoRoute(
           path: "/home",
           builder: (context, state) => const HomePage(),
+        ),
+        GoRoute(
+          path: "/info",
+          builder: (context, state) =>
+              BookInfoPage(state.extra as NaverBookInfo),
         ),
         GoRoute(
           path: "/search",

@@ -83,48 +83,54 @@ class _SearchResultViewState extends State<_SearchResultView> {
       controller: controller,
       itemBuilder: (context, index) {
         NaverBookInfo bookInfo = cubit.state.result!.items![index];
-        return Row(
-          children: [
-            SizedBox(
-              width: 75,
-              height: 115,
-              child: Image.network(bookInfo.image ?? ""),
-            ),
-            const SizedBox(
-              width: 15,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  AppFont(
-                    bookInfo.title ?? "",
-                    maxLine: 2,
-                    overflow: TextOverflow.ellipsis,
-                    size: 16,
-                  ),
-                  const SizedBox(
-                    height: 7,
-                  ),
-                  AppFont(
-                    bookInfo.author ?? "",
-                    size: 13,
-                    color: const Color(0xFF878787),
-                  ),
-                  const SizedBox(
-                    height: 13,
-                  ),
-                  AppFont(
-                    bookInfo.description ?? "",
-                    size: 12,
-                    color: const Color(0xFF838383),
-                    maxLine: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+        return GestureDetector(
+          onTap: () {
+            context.push("/info/", extra: bookInfo);
+          },
+          behavior: HitTestBehavior.translucent,
+          child: Row(
+            children: [
+              SizedBox(
+                width: 75,
+                height: 115,
+                child: Image.network(bookInfo.image ?? ""),
               ),
-            )
-          ],
+              const SizedBox(
+                width: 15,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    AppFont(
+                      bookInfo.title ?? "",
+                      maxLine: 2,
+                      overflow: TextOverflow.ellipsis,
+                      size: 16,
+                    ),
+                    const SizedBox(
+                      height: 7,
+                    ),
+                    AppFont(
+                      bookInfo.author ?? "",
+                      size: 13,
+                      color: const Color(0xFF878787),
+                    ),
+                    const SizedBox(
+                      height: 13,
+                    ),
+                    AppFont(
+                      bookInfo.description ?? "",
+                      size: 12,
+                      color: const Color(0xFF838383),
+                      maxLine: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         );
       },
       separatorBuilder: (context, index) => const Padding(
@@ -140,6 +146,7 @@ class _SearchResultViewState extends State<_SearchResultView> {
   @override
   Widget build(BuildContext context) {
     cubit = context.watch<SearchBookCubit>();
+    print("cubit: ${cubit.state}");
     if (cubit.state.status == CommonStateStatus.init) {
       return _messageView("리뷰할 책을 찾아보세요.");
     }

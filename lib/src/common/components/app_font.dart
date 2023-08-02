@@ -7,6 +7,7 @@ class AppFont extends StatelessWidget {
   final FontWeight? fontWeight;
   final Color? color;
   final TextAlign? textAlign;
+  final double? lineHeight;
   final int? maxLine;
   final TextOverflow? overflow;
 
@@ -18,6 +19,7 @@ class AppFont extends StatelessWidget {
     this.color = Colors.white,
     this.textAlign = TextAlign.left,
     this.maxLine,
+    this.lineHeight,
     this.overflow,
   });
 
@@ -32,6 +34,7 @@ class AppFont extends StatelessWidget {
         fontSize: size,
         fontWeight: fontWeight,
         color: color,
+        height: lineHeight,
       ),
     );
   }
