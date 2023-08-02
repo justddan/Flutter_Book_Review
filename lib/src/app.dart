@@ -5,6 +5,7 @@ import 'package:bookreview/src/common/repository/naver_book_repository.dart';
 import 'package:bookreview/src/common/repository/user_repository.dart';
 import 'package:bookreview/src/home/page/home_page.dart';
 import 'package:bookreview/src/login/page/login_page.dart';
+import 'package:bookreview/src/review/page/review_page.dart';
 import 'package:bookreview/src/root/page/root_page.dart';
 import 'package:bookreview/src/search/cubit/search_book_cubit.dart';
 import 'package:bookreview/src/search/page/search_page.dart';
@@ -66,6 +67,10 @@ class _AppState extends State<App> {
           path: "/info",
           builder: (context, state) =>
               BookInfoPage(state.extra as NaverBookInfo),
+        ),
+        GoRoute(
+          path: "/review",
+          builder: (context, state) => ReviewPage(state.extra as NaverBookInfo),
         ),
         GoRoute(
           path: "/search",

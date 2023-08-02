@@ -50,7 +50,9 @@ class BookInfoPage extends StatelessWidget {
           bottom: 20 + MediaQuery.of(context).padding.bottom,
         ),
         child: Btn(
-          onTap: () {},
+          onTap: () {
+            context.push("/review", extra: bookInfo);
+          },
           text: "리뷰하기",
         ),
       ),
