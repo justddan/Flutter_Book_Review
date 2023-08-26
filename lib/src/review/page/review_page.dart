@@ -1,9 +1,14 @@
 import 'package:bookreview/src/common/components/app_divider.dart';
 import 'package:bookreview/src/common/components/app_font.dart';
 import 'package:bookreview/src/common/components/btn.dart';
+import 'package:bookreview/src/common/components/loading.dart';
 import 'package:bookreview/src/common/components/review_slider_bar.dart';
+import 'package:bookreview/src/common/enum/common_state_status.dart';
 import 'package:bookreview/src/common/model/naver_book_info.dart';
+import 'package:bookreview/src/review/cubit/review_cubit.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
@@ -13,40 +18,92 @@ class ReviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: GestureDetector(
-          onTap: context.pop,
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: SvgPicture.asset("assets/svg/icons/icon_arrow_back.svg"),
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            leading: GestureDetector(
+              onTap: context.pop,
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: SvgPicture.asset("assets/svg/icons/icon_arrow_back.svg"),
+              ),
+            ),
+            title: const AppFont(
+              "리뷰 작성",
+              size: 18,
+            ),
+            centerTitle: true,
+          ),
+          body: Column(
+            children: [
+              _HeaderBookInfo(naverBookInfo),
+              const AppDivider(),
+              Expanded(
+                child: BlocBuilder<ReviewCubit, ReviewState>(
+                  buildWhen: (previous, current) =>
+                      current.isEditMode != previous.isEditMode,
+                  builder: (context, state) {
+                    return _ReviewBox(
+                      initReview: state.reviewInfo?.review,
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+          bottomNavigationBar: Padding(
+            padding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 20,
+              bottom: 20 + MediaQuery.of(context).padding.bottom,
+            ),
+            child: Btn(
+              onTap: context.read<ReviewCubit>().save(),
+              text: "저장",
+            ),
           ),
         ),
-        title: const AppFont(
-          "리뷰 작성",
-          size: 18,
-        ),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          _HeaderBookInfo(naverBookInfo),
-          const AppDivider(),
-          const Expanded(child: _ReviewBox()),
-        ],
-      ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          top: 20,
-          bottom: 20 + MediaQuery.of(context).padding.bottom,
-        ),
-        child: Btn(
-          onTap: () {},
-          text: "저장",
-        ),
-      ),
+        BlocConsumer<ReviewCubit, ReviewState>(
+          listener: (context, state) async {
+            if (state.status == CommonStateStatus.loaded &&
+                state.message != null) {
+              await showCupertinoDialog(
+                context: context,
+                builder: (context) {
+                  return CupertinoAlertDialog(
+                    content: AppFont(
+                      state.message ?? "",
+                      size: 18,
+                      color: Colors.black,
+                      textAlign: TextAlign.center,
+                    ),
+                    actions: [
+                      CupertinoDialogAction(
+                        onPressed: context.pop,
+                        child: const AppFont(
+                          "확인",
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+              context.pop<bool>(true);
+            }
+          },
+          builder: (context, state) {
+            if (state.status == CommonStateStatus.loading) {
+              return const Loading();
+            } else {
+              return Container();
+            }
+          },
+        )
+      ],
     );
   }
 }
@@ -97,11 +154,13 @@ class _HeaderBookInfo extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                ReviewSliderBar(
-                  onChange: (double value) {
-                    print(value);
-                  },
-                )
+                BlocBuilder<ReviewCubit, ReviewState>(
+                    builder: (context, state) {
+                  return ReviewSliderBar(
+                    initValue: state.reviewInfo?.value ?? 0,
+                    onChange: context.read<ReviewCubit>().changeValue,
+                  );
+                })
               ],
             ),
           )
@@ -111,12 +170,27 @@ class _HeaderBookInfo extends StatelessWidget {
   }
 }
 
-class _ReviewBox extends StatelessWidget {
-  const _ReviewBox();
+class _ReviewBox extends StatefulWidget {
+  final String? initReview;
+  const _ReviewBox({this.initReview});
+
+  @override
+  State<_ReviewBox> createState() => _ReviewBoxState();
+}
+
+class _ReviewBoxState extends State<_ReviewBox> {
+  TextEditingController editingController = TextEditingController();
+
+  @override
+  void didUpdateWidget(covariant _ReviewBox oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    editingController.text = widget.initReview ?? "";
+  }
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: editingController,
       maxLines: null,
       decoration: const InputDecoration(
         border: InputBorder.none,
@@ -129,7 +203,7 @@ class _ReviewBox extends StatelessWidget {
       style: const TextStyle(
         color: Colors.white,
       ),
-      onChanged: (value) {},
+      onChanged: context.read<ReviewCubit>().changeReview,
     );
   }
 }

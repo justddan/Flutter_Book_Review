@@ -1,10 +1,13 @@
 import 'package:bookreview/src/book_info/page/book_info_page.dart';
 import 'package:bookreview/src/common/cubit/authentication_cubit.dart';
 import 'package:bookreview/src/common/model/naver_book_info.dart';
+import 'package:bookreview/src/common/repository/book_review_info_repository.dart';
 import 'package:bookreview/src/common/repository/naver_book_repository.dart';
+import 'package:bookreview/src/common/repository/review_repository.dart';
 import 'package:bookreview/src/common/repository/user_repository.dart';
 import 'package:bookreview/src/home/page/home_page.dart';
 import 'package:bookreview/src/login/page/login_page.dart';
+import 'package:bookreview/src/review/cubit/review_cubit.dart';
 import 'package:bookreview/src/review/page/review_page.dart';
 import 'package:bookreview/src/root/page/root_page.dart';
 import 'package:bookreview/src/search/cubit/search_book_cubit.dart';
@@ -70,7 +73,18 @@ class _AppState extends State<App> {
         ),
         GoRoute(
           path: "/review",
-          builder: (context, state) => ReviewPage(state.extra as NaverBookInfo),
+          builder: (context, state) => BlocProvider(
+              create: (context) {
+                var bookInfo = state.extra as NaverBookInfo;
+                var uid = context.read<AuthenticationCubit>().state.user!.uid!;
+                return ReviewCubit(
+                  context.read<BookReviewInfoRepository>(),
+                  context.read<ReviewRepository>(),
+                  uid,
+                  bookInfo,
+                );
+              },
+              child: ReviewPage(state.extra as NaverBookInfo)),
         ),
         GoRoute(
           path: "/search",
