@@ -25,4 +25,15 @@ class UserRepository {
       return false;
     }
   }
+
+  Future<List<UserModel>> allUserInfos(List<String> uids) async {
+    var doc = await db.collection("users").where("uid", whereIn: uids).get();
+    if (doc.docs.isEmpty) {
+      return [];
+    } else {
+      return doc.docs
+          .map<UserModel>((data) => UserModel.fromJson(data.data()))
+          .toList();
+    }
+  }
 }

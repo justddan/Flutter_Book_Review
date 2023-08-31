@@ -1,8 +1,10 @@
+import 'package:bookreview/src/book_info/cubit/book_info_cubit.dart';
 import 'package:bookreview/src/common/components/app_divider.dart';
 import 'package:bookreview/src/common/components/app_font.dart';
 import 'package:bookreview/src/common/components/btn.dart';
 import 'package:bookreview/src/common/model/naver_book_info.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
@@ -50,8 +52,12 @@ class BookInfoPage extends StatelessWidget {
           bottom: 20 + MediaQuery.of(context).padding.bottom,
         ),
         child: Btn(
-          onTap: () {
-            context.push("/review", extra: bookInfo);
+          onTap: () async {
+            var isNeedsRefresh =
+                await context.push<bool?>("/review", extra: bookInfo);
+            if (isNeedsRefresh != null && isNeedsRefresh) {
+              context.read<BookInfoCubit>().refresh();
+            }
           },
           text: "리뷰하기",
         ),
@@ -67,7 +73,7 @@ class _BookDisplayLayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 25),
       child: Column(
         children: [
           ClipRRect(
@@ -91,11 +97,18 @@ class _BookDisplayLayer extends StatelessWidget {
               const SizedBox(
                 width: 6,
               ),
-              const AppFont(
-                "8.88",
-                size: 16,
-                color: Color(0xfff4aa2b),
-              )
+              BlocBuilder<BookInfoCubit, BookInfoState>(
+                  builder: (context, state) {
+                return AppFont(
+                  state.bookReviewInfo == null
+                      ? "리뷰 점수 없음"
+                      : (state.bookReviewInfo!.totalCounts! /
+                              state.bookReviewInfo!.reviewerUids!.length)
+                          .toStringAsFixed(2),
+                  size: 16,
+                  color: const Color(0xfff4aa2b),
+                );
+              })
             ],
           ),
           const SizedBox(
@@ -103,6 +116,7 @@ class _BookDisplayLayer extends StatelessWidget {
           ),
           AppFont(
             bookInfo.title ?? "",
+            textAlign: TextAlign.center,
             size: 16,
             fontWeight: FontWeight.bold,
           ),
@@ -178,7 +192,33 @@ class _ReviewerLayer extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          SizedBox(height: 70, child: _noneReviewer()),
+          BlocBuilder<BookInfoCubit, BookInfoState>(
+            builder: (context, state) {
+              if (state.bookReviewInfo == null) {
+                return SizedBox(height: 70, child: _noneReviewer());
+              } else {
+                return SizedBox(
+                  height: 70,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return CircleAvatar(
+                        backgroundColor: Colors.grey,
+                        radius: 32,
+                        backgroundImage:
+                            Image.network(state.reviewers![index].profile ?? "")
+                                .image,
+                      );
+                    },
+                    separatorBuilder: (context, index) => const SizedBox(
+                      width: 20,
+                    ),
+                    itemCount: state.reviewers?.length ?? 0,
+                  ),
+                );
+              }
+            },
+          ),
         ],
       ),
     );
