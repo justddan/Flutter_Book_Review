@@ -1,20 +1,21 @@
 import 'package:bookreview/src/common/components/app_divider.dart';
 import 'package:bookreview/src/common/components/app_font.dart';
+import 'package:bookreview/src/common/components/book_review_header_widget.dart';
 import 'package:bookreview/src/common/components/btn.dart';
 import 'package:bookreview/src/common/components/loading.dart';
 import 'package:bookreview/src/common/components/review_slider_bar.dart';
 import 'package:bookreview/src/common/enum/common_state_status.dart';
 import 'package:bookreview/src/common/model/naver_book_info.dart';
-import 'package:bookreview/src/review/cubit/review_cubit.dart';
+import 'package:bookreview/src/review/write/cubit/review_write_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
-class ReviewPage extends StatelessWidget {
+class ReviewWrtiePage extends StatelessWidget {
   final NaverBookInfo naverBookInfo;
-  const ReviewPage(this.naverBookInfo, {super.key});
+  const ReviewWrtiePage(this.naverBookInfo, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +38,20 @@ class ReviewPage extends StatelessWidget {
           ),
           body: Column(
             children: [
-              _HeaderBookInfo(naverBookInfo),
+              BookReviewHeaderWidget(
+                naverBookInfo: naverBookInfo,
+                reviewCountDisplayWidget:
+                    BlocBuilder<ReviewWriteCubit, ReviewWriteState>(
+                        builder: (context, state) {
+                  return ReviewSliderBar(
+                    initValue: state.reviewInfo?.value ?? 0,
+                    onChange: context.read<ReviewWriteCubit>().changeValue,
+                  );
+                }),
+              ),
               const AppDivider(),
               Expanded(
-                child: BlocBuilder<ReviewCubit, ReviewState>(
+                child: BlocBuilder<ReviewWriteCubit, ReviewWriteState>(
                   buildWhen: (previous, current) =>
                       current.isEditMode != previous.isEditMode,
                   builder: (context, state) {
@@ -60,12 +71,12 @@ class ReviewPage extends StatelessWidget {
               bottom: 20 + MediaQuery.of(context).padding.bottom,
             ),
             child: Btn(
-              onTap: context.read<ReviewCubit>().save(),
+              onTap: context.read<ReviewWriteCubit>().save(),
               text: "저장",
             ),
           ),
         ),
-        BlocConsumer<ReviewCubit, ReviewState>(
+        BlocConsumer<ReviewWriteCubit, ReviewWriteState>(
           listener: (context, state) async {
             if (state.status == CommonStateStatus.loaded &&
                 state.message != null) {
@@ -108,68 +119,6 @@ class ReviewPage extends StatelessWidget {
   }
 }
 
-class _HeaderBookInfo extends StatelessWidget {
-  final NaverBookInfo bookInfo;
-  const _HeaderBookInfo(this.bookInfo);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(25.0),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(7),
-            child: SizedBox(
-              width: 71,
-              height: 106,
-              child: Image.network(
-                bookInfo.image ?? "",
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          const SizedBox(
-            width: 15,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                AppFont(
-                  bookInfo.title ?? "",
-                  size: 16,
-                  fontWeight: FontWeight.bold,
-                  maxLine: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                AppFont(
-                  bookInfo.author ?? "",
-                  size: 12,
-                  color: const Color(0xff878787),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                BlocBuilder<ReviewCubit, ReviewState>(
-                    builder: (context, state) {
-                  return ReviewSliderBar(
-                    initValue: state.reviewInfo?.value ?? 0,
-                    onChange: context.read<ReviewCubit>().changeValue,
-                  );
-                })
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
 class _ReviewBox extends StatefulWidget {
   final String? initReview;
   const _ReviewBox({this.initReview});
@@ -203,7 +152,7 @@ class _ReviewBoxState extends State<_ReviewBox> {
       style: const TextStyle(
         color: Colors.white,
       ),
-      onChanged: context.read<ReviewCubit>().changeReview,
+      onChanged: context.read<ReviewWriteCubit>().changeReview,
     );
   }
 }

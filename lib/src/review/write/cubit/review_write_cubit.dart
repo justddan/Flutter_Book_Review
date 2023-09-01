@@ -7,13 +7,13 @@ import 'package:bookreview/src/common/repository/review_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ReviewCubit extends Cubit<ReviewState> {
+class ReviewWriteCubit extends Cubit<ReviewWriteState> {
   final BookReviewInfoRepository _bookReviewInfoRepository;
   final ReviewRepository _reviewRepository;
-  ReviewCubit(this._bookReviewInfoRepository, this._reviewRepository,
+  ReviewWriteCubit(this._bookReviewInfoRepository, this._reviewRepository,
       String uid, NaverBookInfo naverBookInfo)
       : super(
-          ReviewState(
+          ReviewWriteState(
             reviewInfo: Review(
               bookId: naverBookInfo.isbn,
               reviewerUid: uid,
@@ -111,28 +111,28 @@ class ReviewCubit extends Cubit<ReviewState> {
   }
 }
 
-class ReviewState extends Equatable {
+class ReviewWriteState extends Equatable {
   final Review? reviewInfo;
   final bool? isEditMode;
   final double? beforeValue;
   final CommonStateStatus status;
   final String? message;
 
-  const ReviewState(
+  const ReviewWriteState(
       {this.reviewInfo,
       this.isEditMode,
       this.beforeValue,
       this.status = CommonStateStatus.init,
       this.message});
 
-  ReviewState copyWith({
+  ReviewWriteState copyWith({
     Review? reviewInfo,
     bool? isEditMode,
     double? beforeValue,
     CommonStateStatus? status,
     String? message,
   }) {
-    return ReviewState(
+    return ReviewWriteState(
       reviewInfo: reviewInfo ?? this.reviewInfo,
       isEditMode: isEditMode ?? this.isEditMode,
       beforeValue: beforeValue ?? this.beforeValue,

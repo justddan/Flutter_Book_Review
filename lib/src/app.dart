@@ -8,8 +8,10 @@ import 'package:bookreview/src/common/repository/review_repository.dart';
 import 'package:bookreview/src/common/repository/user_repository.dart';
 import 'package:bookreview/src/home/page/home_page.dart';
 import 'package:bookreview/src/login/page/login_page.dart';
-import 'package:bookreview/src/review/cubit/review_cubit.dart';
-import 'package:bookreview/src/review/page/review_page.dart';
+import 'package:bookreview/src/review/detail/cubit/review_detail_cubit.dart';
+import 'package:bookreview/src/review/detail/page/review_detail_page.dart';
+import 'package:bookreview/src/review/write/cubit/review_write_cubit.dart';
+import 'package:bookreview/src/review/write/page/review_write_page.dart';
 import 'package:bookreview/src/root/page/root_page.dart';
 import 'package:bookreview/src/search/cubit/search_book_cubit.dart';
 import 'package:bookreview/src/search/page/search_page.dart';
@@ -84,14 +86,25 @@ class _AppState extends State<App> {
               create: (context) {
                 var bookInfo = state.extra as NaverBookInfo;
                 var uid = context.read<AuthenticationCubit>().state.user!.uid!;
-                return ReviewCubit(
+                return ReviewWriteCubit(
                   context.read<BookReviewInfoRepository>(),
                   context.read<ReviewRepository>(),
                   uid,
                   bookInfo,
                 );
               },
-              child: ReviewPage(state.extra as NaverBookInfo)),
+              child: ReviewWrtiePage(state.extra as NaverBookInfo)),
+        ),
+        GoRoute(
+          path: "/review_detail/:bookId:/uid",
+          builder: (context, state) => BlocProvider(
+              create: (context) => ReviewDetailCubit(
+                    context.read<ReviewRepository>(),
+                    context.read<UserRepository>(),
+                    state.pathParameters["bookId"] as String,
+                    state.pathParameters["uid"] as String,
+                  ),
+              child: ReviewDetailPage(state.extra as NaverBookInfo)),
         ),
         GoRoute(
           path: "/search",

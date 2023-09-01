@@ -202,12 +202,19 @@ class _ReviewerLayer extends StatelessWidget {
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
-                      return CircleAvatar(
-                        backgroundColor: Colors.grey,
-                        radius: 32,
-                        backgroundImage:
-                            Image.network(state.reviewers![index].profile ?? "")
-                                .image,
+                      return GestureDetector(
+                        onTap: () {
+                          context.push(
+                              "/review-detail/${state.bookReviewInfo!.bookId}/${state.reviewers![index].uid}",
+                              extra: state.bookReviewInfo!.naverBookInfo);
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: Colors.grey,
+                          radius: 32,
+                          backgroundImage: Image.network(
+                                  state.reviewers![index].profile ?? "")
+                              .image,
+                        ),
                       );
                     },
                     separatorBuilder: (context, index) => const SizedBox(

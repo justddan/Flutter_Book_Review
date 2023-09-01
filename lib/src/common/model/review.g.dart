@@ -21,6 +21,9 @@ Review _$ReviewFromJson(Map<String, dynamic> json) => Review(
           : DateTime.parse(json['updatedAt'] as String),
       bookId: json['bookId'] as String?,
       reviewerUid: json['reviewerUid'] as String?,
+      likedUsers: (json['likedUsers'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$ReviewToJson(Review instance) => <String, dynamic>{
@@ -28,6 +31,7 @@ Map<String, dynamic> _$ReviewToJson(Review instance) => <String, dynamic>{
       'review': instance.review,
       'value': instance.value,
       'reviewerUid': instance.reviewerUid,
+      'likedUsers': instance.likedUsers,
       'naverBookInfo': instance.naverBookInfo?.toJson(),
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
