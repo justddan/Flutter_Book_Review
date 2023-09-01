@@ -10,12 +10,16 @@ class UserModel extends Equatable {
   final String? email;
   final String? profile;
   final String? description;
+  final List<String>? followers;
+  final List<String>? followings;
 
   const UserModel({
     this.uid,
     this.name,
     this.email,
     this.profile,
+    this.followers,
+    this.followings,
     this.description,
   });
 
@@ -29,6 +33,8 @@ class UserModel extends Equatable {
     String? name,
     String? email,
     String? profile,
+    List<String>? followers,
+    List<String>? followings,
     String? description,
   }) {
     return UserModel(
@@ -36,6 +42,8 @@ class UserModel extends Equatable {
       name: name ?? this.name,
       email: email ?? this.email,
       profile: profile ?? this.profile,
+      followers: followers ?? this.followers,
+      followings: followings ?? this.followings,
       description: description ?? this.description,
     );
   }
@@ -46,6 +54,7 @@ class UserModel extends Equatable {
         name,
         email,
         profile,
+        followers,
         description,
       ];
 }

@@ -36,4 +36,42 @@ class UserRepository {
           .toList();
     }
   }
+
+  Future<bool> followEvent(
+      bool isFollow, String targetUid, String requestUid) async {
+    try {
+      final batch = db.batch();
+
+      var targetUserDoc =
+          await db.collection("users").where("uid", isEqualTo: targetUid).get();
+      var targetUserInfo = UserModel.fromJson(targetUserDoc.docs.first.data());
+      var followers = targetUserInfo.followers ?? [];
+      if (isFollow) {
+        followers.add(requestUid);
+      } else {
+        followers.remove(requestUid);
+      }
+      var targetRef = db.collection("users").doc(targetUserDoc.docs.first.id);
+      batch.update(targetRef, {"followers": followers});
+
+      var requestUserDoc = await db
+          .collection("users")
+          .where("uid", isEqualTo: requestUid)
+          .get();
+      var requestUserInfo = UserModel.fromJson(targetUserDoc.docs.first.data());
+      var followings = requestUserInfo.followings ?? [];
+      if (isFollow) {
+        followers.add(targetUid);
+      } else {
+        followers.remove(targetUid);
+      }
+      var requestRef = db.collection("users").doc(requestUserDoc.docs.first.id);
+      batch.update(requestRef, {"followings": followings});
+
+      await batch.commit();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }
