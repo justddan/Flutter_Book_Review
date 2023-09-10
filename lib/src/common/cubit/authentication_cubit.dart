@@ -1,5 +1,6 @@
 import 'package:bookreview/src/common/model/user_model.dart';
 import 'package:bookreview/src/common/repository/authentication_repository.dart';
+import 'package:bookreview/src/common/repository/review_repository.dart';
 import 'package:bookreview/src/common/repository/user_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,12 @@ class AuthenticationCubit extends Cubit<AuthenticationState>
     with ChangeNotifier {
   final AuthenticationRepository _authenticationRepository;
   final UserRepository _userRepository;
-  AuthenticationCubit(this._authenticationRepository, this._userRepository)
-      : super(const AuthenticationState());
+  final ReviewRepository _reviewRepository;
+  AuthenticationCubit(
+    this._authenticationRepository,
+    this._userRepository,
+    this._reviewRepository,
+  ) : super(const AuthenticationState());
 
   void init() {
     _authenticationRepository.user.listen((user) {
@@ -57,6 +62,11 @@ class AuthenticationCubit extends Cubit<AuthenticationState>
   void onChange(Change<AuthenticationState> change) {
     super.onChange(change);
     print(change);
+  }
+
+  Future<void> updateReviewCounts() async {
+    var results = await _reviewRepository.loadMyAllReviews(state.user!.uid!);
+    await _userRepository.updateReviewCounts(state.user!.uid!, results.length);
   }
 }
 

@@ -1,5 +1,6 @@
 import 'package:bookreview/src/common/components/app_divider.dart';
 import 'package:bookreview/src/common/components/app_font.dart';
+import 'package:bookreview/src/common/components/icon_statistic_widget.dart';
 import 'package:bookreview/src/common/cubit/authentication_cubit.dart';
 import 'package:bookreview/src/common/enum/common_state_status.dart';
 import 'package:bookreview/src/profile/cubit/user_profile_cubit.dart';
@@ -117,21 +118,13 @@ class _ProfileInfo extends StatelessWidget {
                   color: const Color(0xff5f5f5f),
                 ),
               ),
-              child: Row(
-                children: [
-                  SvgPicture.asset("assets/svg/icons/icon_journals.svg"),
-                  const SizedBox(
-                    width: 6,
-                  ),
-                  BlocBuilder<UserReiviewCubit, UserReiviewState>(
-                      builder: (context, state) {
-                    return AppFont(
-                      "${state.results.length}",
-                      size: 13,
-                      color: const Color(0xff5f5f5f),
-                    );
-                  }),
-                ],
+              child: BlocBuilder<UserReiviewCubit, UserReiviewState>(
+                builder: (context, state) {
+                  return IconStatisticWidget(
+                    iconPath: "assets/svg/icons/icon_journals.svg",
+                    value: state.results.length,
+                  );
+                },
               ),
             ),
             const SizedBox(
@@ -148,21 +141,13 @@ class _ProfileInfo extends StatelessWidget {
                   color: const Color(0xff5f5f5f),
                 ),
               ),
-              child: Row(
-                children: [
-                  SvgPicture.asset("assets/svg/icons/icon_people.svg"),
-                  const SizedBox(
-                    width: 6,
-                  ),
-                  BlocBuilder<UserProfileCubit, UserProfileState>(
-                      builder: (context, state) {
-                    return AppFont(
-                      "${state.userInfo?.followers?.length ?? 0}",
-                      size: 13,
-                      color: const Color(0xff5f5f5f),
-                    );
-                  }),
-                ],
+              child: BlocBuilder<UserProfileCubit, UserProfileState>(
+                builder: (context, state) {
+                  return IconStatisticWidget(
+                    iconPath: "assets/svg/icons/icon_people.svg",
+                    value: state.userInfo?.followers?.length ?? 0,
+                  );
+                },
               ),
             ),
           ],

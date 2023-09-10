@@ -76,9 +76,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => AuthenticationCubit(
-              context.read<AuthenticationRepository>(),
-              context.read<UserRepository>(),
-            ),
+                context.read<AuthenticationRepository>(),
+                context.read<UserRepository>(),
+                context.read<ReviewRepository>()),
           ),
         ],
         child: const App(),

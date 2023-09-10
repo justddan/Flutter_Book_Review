@@ -52,7 +52,10 @@ class UserRepository {
         followers.remove(requestUid);
       }
       var targetRef = db.collection("users").doc(targetUserDoc.docs.first.id);
-      batch.update(targetRef, {"followers": followers});
+      batch.update(targetRef, {
+        "followers": followers,
+        "followersCount": followers.length,
+      });
 
       var requestUserDoc = await db
           .collection("users")
@@ -66,12 +69,38 @@ class UserRepository {
         followers.remove(targetUid);
       }
       var requestRef = db.collection("users").doc(requestUserDoc.docs.first.id);
-      batch.update(requestRef, {"followings": followings});
+      batch.update(requestRef, {
+        "followings": followings,
+        "followingsCount": followings.length,
+      });
 
       await batch.commit();
       return true;
     } catch (e) {
       return false;
     }
+  }
+
+  Future<void> updateReviewCounts(String uid, int reviewCounts) async {
+    var targetUserDoc =
+        await db.collection("users").where("uid", isEqualTo: uid).get();
+    await db
+        .collection("users")
+        .doc(targetUserDoc.docs.first.id)
+        .update({"reviewCounts": reviewCounts});
+  }
+
+  Future<List<UserModel>> loadTopReviewerData() async {
+    var doc = await db
+        .collection("users")
+        .orderBy("followersCount", descending: true)
+        .limit(10)
+        .get();
+    if (doc.docs.isNotEmpty) {
+      doc.docs
+          .map<UserModel>((data) => UserModel.fromJson(data.data()))
+          .toList();
+    }
+    return [];
   }
 }

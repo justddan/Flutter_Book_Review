@@ -4,6 +4,7 @@ import 'package:bookreview/src/common/components/book_review_header_widget.dart'
 import 'package:bookreview/src/common/components/btn.dart';
 import 'package:bookreview/src/common/components/loading.dart';
 import 'package:bookreview/src/common/components/review_slider_bar.dart';
+import 'package:bookreview/src/common/cubit/authentication_cubit.dart';
 import 'package:bookreview/src/common/enum/common_state_status.dart';
 import 'package:bookreview/src/common/model/naver_book_info.dart';
 import 'package:bookreview/src/review/write/cubit/review_write_cubit.dart';
@@ -103,7 +104,7 @@ class ReviewWrtiePage extends StatelessWidget {
                   );
                 },
               );
-              context.pop<bool>(true);
+              await context.read<AuthenticationCubit>().updateReviewCounts();
             }
           },
           builder: (context, state) {

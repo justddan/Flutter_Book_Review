@@ -31,4 +31,18 @@ class BookReviewInfoRepository {
         .doc(data.docs.first.id)
         .update(bookReviewInfo.toJson());
   }
+
+  Future<List<BookReviewInfo>?> loadBookReviewRecentlyData() async {
+    var doc = await db
+        .collection("book_review_info")
+        .orderBy("updatedAt", descending: true)
+        .limit(10)
+        .get();
+    if (doc.docs.isEmpty) {
+      return null;
+    }
+    return doc.docs
+        .map<BookReviewInfo>((data) => BookReviewInfo.fromJson(data.data()))
+        .toList();
+  }
 }
